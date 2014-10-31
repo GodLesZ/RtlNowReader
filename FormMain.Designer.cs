@@ -24,13 +24,15 @@
         /// </summary>
         private void InitializeComponent() {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormMain));
             this.listShows = new System.Windows.Forms.ListView();
             this.colShowName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.imagesShowThumbs = new System.Windows.Forms.ImageList(this.components);
             this.listEpisodes = new System.Windows.Forms.ListView();
             this.colEpisodesName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.txtRtmpdump = new System.Windows.Forms.TextBox();
             this.imagesEpisodeThumbs = new System.Windows.Forms.ImageList(this.components);
+            this.txtRtmpdump = new System.Windows.Forms.TextBox();
+            this.colEpisodesDumped = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.SuspendLayout();
             // 
             // listShows
@@ -66,10 +68,12 @@
             // 
             // listEpisodes
             // 
-            this.listEpisodes.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.listEpisodes.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.listEpisodes.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.colEpisodesName});
+            this.colEpisodesName,
+            this.colEpisodesDumped});
             this.listEpisodes.FullRowSelect = true;
             this.listEpisodes.GridLines = true;
             this.listEpisodes.HideSelection = false;
@@ -86,11 +90,18 @@
             // colEpisodesName
             // 
             this.colEpisodesName.Text = "Name";
-            this.colEpisodesName.Width = 377;
+            this.colEpisodesName.Width = 341;
+            // 
+            // imagesEpisodeThumbs
+            // 
+            this.imagesEpisodeThumbs.ColorDepth = System.Windows.Forms.ColorDepth.Depth32Bit;
+            this.imagesEpisodeThumbs.ImageSize = new System.Drawing.Size(50, 28);
+            this.imagesEpisodeThumbs.TransparentColor = System.Drawing.Color.Transparent;
             // 
             // txtRtmpdump
             // 
-            this.txtRtmpdump.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtRtmpdump.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.txtRtmpdump.Location = new System.Drawing.Point(375, 195);
             this.txtRtmpdump.Multiline = true;
             this.txtRtmpdump.Name = "txtRtmpdump";
@@ -99,11 +110,10 @@
             this.txtRtmpdump.Size = new System.Drawing.Size(412, 213);
             this.txtRtmpdump.TabIndex = 2;
             // 
-            // imagesEpisodeThumbs
+            // colEpisodesDumped
             // 
-            this.imagesEpisodeThumbs.ColorDepth = System.Windows.Forms.ColorDepth.Depth32Bit;
-            this.imagesEpisodeThumbs.ImageSize = new System.Drawing.Size(50, 28);
-            this.imagesEpisodeThumbs.TransparentColor = System.Drawing.Color.Transparent;
+            this.colEpisodesDumped.Text = "";
+            this.colEpisodesDumped.Width = 26;
             // 
             // FormMain
             // 
@@ -113,7 +123,8 @@
             this.Controls.Add(this.txtRtmpdump);
             this.Controls.Add(this.listEpisodes);
             this.Controls.Add(this.listShows);
-            this.MaximumSize = new System.Drawing.Size(815, 459);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MinimumSize = new System.Drawing.Size(815, 459);
             this.Name = "FormMain";
             this.Text = "RtlNow RTMPE/HDS Dumper - by GodLesZ";
             this.Shown += new System.EventHandler(this.FormMain_Shown);
@@ -131,6 +142,7 @@
         private System.Windows.Forms.ColumnHeader colEpisodesName;
         private System.Windows.Forms.TextBox txtRtmpdump;
         private System.Windows.Forms.ImageList imagesEpisodeThumbs;
+        private System.Windows.Forms.ColumnHeader colEpisodesDumped;
     }
 }
 

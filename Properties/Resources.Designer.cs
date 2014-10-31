@@ -9,8 +9,9 @@
 //------------------------------------------------------------------------------
 
 namespace GodLesZ.Tools.RtlNowReader.Properties {
-
-
+    using System;
+    
+    
     /// <summary>
     ///   A strongly-typed resource class, for looking up localized strings, etc.
     /// </summary>
@@ -22,29 +23,29 @@ namespace GodLesZ.Tools.RtlNowReader.Properties {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resources {
-
+        
         private static global::System.Resources.ResourceManager resourceMan;
-
+        
         private static global::System.Globalization.CultureInfo resourceCulture;
-
+        
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
         internal Resources() {
         }
-
+        
         /// <summary>
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
-                if ((resourceMan == null)) {
+                if (object.ReferenceEquals(resourceMan, null)) {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("GodLesZ.Tools.RtlNowReader.Properties.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
             }
         }
-
+        
         /// <summary>
         ///   Overrides the current thread's CurrentUICulture property for all
         ///   resource lookups using this strongly typed resource class.
@@ -56,6 +57,87 @@ namespace GodLesZ.Tools.RtlNowReader.Properties {
             }
             set {
                 resourceCulture = value;
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No free episodes - I&apos;m sorry!.
+        /// </summary>
+        internal static string Error_EpisodeLoader_NoFreeEpisodes_Msg {
+            get {
+                return ResourceManager.GetString("Error_EpisodeLoader_NoFreeEpisodes_Msg", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No free episodes.
+        /// </summary>
+        internal static string Error_EpisodeLoader_NoFreeEpisodes_Title {
+            get {
+                return ResourceManager.GetString("Error_EpisodeLoader_NoFreeEpisodes_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Somthign strange happend - no show found...
+        /// </summary>
+        internal static string Error_ShowLoader_NoShowFound_Msg {
+            get {
+                return ResourceManager.GetString("Error_ShowLoader_NoShowFound_Msg", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error.
+        /// </summary>
+        internal static string Error_ShowLoader_NoShowFound_Title {
+            get {
+                return ResourceManager.GetString("Error_ShowLoader_NoShowFound_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to dump video, please refer to rtmpdump log.!.
+        /// </summary>
+        internal static string Error_VideoLoader_FailedToDump_Msg {
+            get {
+                return ResourceManager.GetString("Error_VideoLoader_FailedToDump_Msg", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error.
+        /// </summary>
+        internal static string Error_VideoLoader_FailedToDump_Title {
+            get {
+                return ResourceManager.GetString("Error_VideoLoader_FailedToDump_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Dump Finished.
+        /// </summary>
+        internal static string VideoLoader_DumpFinished_Title {
+            get {
+                return ResourceManager.GetString("VideoLoader_DumpFinished_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File already exists  - overwrite?.
+        /// </summary>
+        internal static string VideoLoader_FileExists_Msg {
+            get {
+                return ResourceManager.GetString("VideoLoader_FileExists_Msg", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File exists.
+        /// </summary>
+        internal static string VideoLoader_FileExists_Title {
+            get {
+                return ResourceManager.GetString("VideoLoader_FileExists_Title", resourceCulture);
             }
         }
     }

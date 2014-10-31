@@ -6,6 +6,7 @@ using System.Net;
 namespace GodLesZ.Tools.RtlNowReader.Library.Model {
 
     public class ShowEntry {
+        protected Image _thumb = null;
 
         public string Name {
             get;
@@ -26,10 +27,14 @@ namespace GodLesZ.Tools.RtlNowReader.Library.Model {
 
 
         public Image FetchThumb() {
+            if (_thumb != null) {
+                return _thumb;
+            }
+            
             var client = new WebClient();
             var buf = client.DownloadData(ThumbUrl);
             using (var stream = new MemoryStream(buf)) {
-                return Image.FromStream(stream);
+                return _thumb = Image.FromStream(stream);
             }
         }
 

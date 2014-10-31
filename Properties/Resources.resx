@@ -114,4 +114,31 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Error_EpisodeLoader_NoFreeEpisodes_Msg" xml:space="preserve">
+    <value>No free episodes - I'm sorry!</value>
+  </data>
+  <data name="Error_EpisodeLoader_NoFreeEpisodes_Title" xml:space="preserve">
+    <value>No free episodes</value>
+  </data>
+  <data name="Error_ShowLoader_NoShowFound_Msg" xml:space="preserve">
+    <value>Somthign strange happend - no show found..</value>
+  </data>
+  <data name="Error_ShowLoader_NoShowFound_Title" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="Error_VideoLoader_FailedToDump_Msg" xml:space="preserve">
+    <value>Failed to dump video, please refer to rtmpdump log.!</value>
+  </data>
+  <data name="Error_VideoLoader_FailedToDump_Title" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="VideoLoader_DumpFinished_Title" xml:space="preserve">
+    <value>Dump Finished</value>
+  </data>
+  <data name="VideoLoader_FileExists_Msg" xml:space="preserve">
+    <value>File already exists  - overwrite?</value>
+  </data>
+  <data name="VideoLoader_FileExists_Title" xml:space="preserve">
+    <value>File exists</value>
+  </data>
 </root>

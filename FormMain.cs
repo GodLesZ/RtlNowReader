@@ -1,26 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Net.Sockets;
-using System.Security.Policy;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Web;
 using System.Windows.Forms;
 using CsQuery;
 using GodLesZ.Tools.RtlNowReader.Library.Model;
+using GodLesZ.Tools.RtlNowReader.Properties;
 
 namespace GodLesZ.Tools.RtlNowReader {
 
     public partial class FormMain : Form {
-        protected List<ShowEntry> _shows = new List<ShowEntry>();
+        private readonly List<ShowEntry> _shows = new List<ShowEntry>();
 
         public FormMain() {
             InitializeComponent();
@@ -78,15 +75,15 @@ namespace GodLesZ.Tools.RtlNowReader {
             listShows.Items.Clear();
             listEpisodes.Items.Clear();
             imagesShowThumbs.Images.Clear();
-            
+
             if (_shows.Count == 0) {
-                MessageBox.Show("Somthign strange happend - no show found..", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(Resources.Error_ShowLoader_NoShowFound_Msg, Resources.Error_ShowLoader_NoShowFound_Title, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
             foreach (var showEntry in _shows) {
                 imagesShowThumbs.Images.Add(showEntry.FetchThumb());
-                listShows.Items.Add(new ListViewItem(new [] {
+                listShows.Items.Add(new ListViewItem(new[] {
                     showEntry.Name
                 }, imagesShowThumbs.Images.Count - 1));
             }
@@ -97,33 +94,36 @@ namespace GodLesZ.Tools.RtlNowReader {
 
         #region Episode Loader
         private void EpisodeLoaderOnDoWork(object sender, DoWorkEventArgs args) {
-            var showEntry = (ShowEntry)args.Argument;
-            var episodeList = new List<EpisodeEntry>();
+            var showIndex = (int)args.Argument;
+            var showEntry = _shows[showIndex];
 
             var client = new WebClient();
             client.Headers.Add(HttpRequestHeader.UserAgent, "");
             var html = client.DownloadString("http://rtl-now.rtl.de/" + showEntry.Link);
             CQ doc = html;
             var episodeContainer = doc["div.line"];
-            foreach (var container in episodeContainer.Elements) {
-                var containerCq = CQ.Create(container);
-                var minibtn = containerCq["a.minibutton:first"];
-                if (minibtn.Length == 0 || minibtn[0].InnerText.ToLower().Trim() != "kostenlos") {
-                    continue;
-                }
 
-                var videoName = containerCq["div.title a:first"].Attr("title").Trim();
-                var videoDate = CQ.Create(containerCq["div.time:first"][0].InnerHTML).Remove("div").Render().Trim().Split(' ')[0];
-                var videoTitle = string.Format("{0} - {1}", videoDate, videoName);
-                var videoUrl = MakeUtf8(containerCq["div.title a:first"].Attr("href").Trim());
-                var match = Regex.Match(html, "<meta property=\"og:image\" content=\"(.+?)\"", RegexOptions.IgnoreCase);
-                var videoPoster = (match.Success ? match.Groups[1].Captures[0].Value.Trim() : "");
-                episodeList.Add(new EpisodeEntry {
+            var episodeList = (
+                from container
+                    in episodeContainer.Elements
+                select
+                    CQ.Create(container) into containerCq
+                let minibtn = containerCq["a.minibutton:first"]
+                where
+                    minibtn.Length != 0 &&
+                    minibtn[0].InnerText.ToLower().Trim() == "kostenlos"
+                let videoName = containerCq["div.title a:first"][0].InnerText.Trim()
+                let videoDate = CQ.Create(containerCq["div.time:first"][0].InnerHTML).Remove("div").Render().Trim().Split(' ')[0]
+                let videoTitle = string.Format("{0} - {1}", videoDate, videoName)
+                let videoUrl = MakeUtf8(containerCq["div.title a:first"].Attr("href").Trim())
+                let match = Regex.Match(html, "<meta property=\"og:image\" content=\"(.+?)\"", RegexOptions.IgnoreCase)
+                let videoPoster = (match.Success ? match.Groups[1].Captures[0].Value.Trim() : "")
+                select new EpisodeEntry {
                     Name = videoTitle,
                     Link = videoUrl,
                     Poster = videoPoster
-                });
-            }
+                }
+            ).ToList();
 
             showEntry.Episodes = episodeList;
         }
@@ -134,7 +134,7 @@ namespace GodLesZ.Tools.RtlNowReader {
 
             var showEntry = _shows[listShows.SelectedIndices[0]];
             if (showEntry.Episodes == null || showEntry.Episodes.Count == 0) {
-                MessageBox.Show("No free episodes - I'm sorry!", "No free episodes", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(Resources.Error_EpisodeLoader_NoFreeEpisodes_Msg, Resources.Error_EpisodeLoader_NoFreeEpisodes_Title, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 UnblockUi();
                 listEpisodes.Focus();
                 return;
@@ -142,9 +142,15 @@ namespace GodLesZ.Tools.RtlNowReader {
 
             foreach (var episodeEntry in showEntry.Episodes) {
                 imagesEpisodeThumbs.Images.Add(episodeEntry.FetchPoster());
-                listEpisodes.Items.Add(new ListViewItem(new[] {
+                var item = new ListViewItem(new[] {
                     episodeEntry.Name
-                }, imagesEpisodeThumbs.Images.Count - 1));
+                }, imagesEpisodeThumbs.Images.Count - 1);
+                if (File.Exists(episodeEntry.Filepath)) {
+                    foreach (var subItem in item.SubItems) {
+                        ((ListViewItem.ListViewSubItem) subItem).ForeColor = Color.LimeGreen;
+                    }
+                }
+                listEpisodes.Items.Add(item);
             }
 
             UnblockUi();
@@ -154,8 +160,10 @@ namespace GodLesZ.Tools.RtlNowReader {
 
         #region Video Loader
         private void VideoLoaderOnDoWork(object sender, DoWorkEventArgs args) {
-            var worker = (BackgroundWorker) sender;
-            var episodeEntry = (EpisodeEntry)args.Argument;
+            var worker = (BackgroundWorker)sender;
+            var indexData = (int[])args.Argument;
+            var showEntry = _shows[indexData[0]];
+            var episodeEntry = showEntry.Episodes[indexData[1]];
 
             args.Result = null;
 
@@ -182,10 +190,12 @@ namespace GodLesZ.Tools.RtlNowReader {
             var matchHds = Regex.Match(streamUrl, "http://(.+?)/(.+?)/(.+?)/(.+?)/(.+?)\\?", RegexOptions.IgnoreCase);
             if (matchRtmpe.Success) {
                 // @TODO
+                throw new NotImplementedException("TRMPE stream are not yet supported");
             }
             if (matchHds.Success) {
                 var sUrl = string.Format("rtmpe://fms-fra{0}.rtl.de/{1}/", new Random().Next(1, 34), matchHds.Groups[3].Captures[0].Value);
                 var sPlaypath = string.Format("mp4:{0}", matchHds.Groups[5].Captures[0].Value.Replace(".f4m", ""));
+                // ReSharper disable once ConvertToConstant.Local
                 var sSwfVfy = 1;
                 var sSwfUrl = string.Format("http://rtl-now.rtl.de/includes/vodplayer.swf");
                 var sApp = string.Format("{0}/_definst_", matchHds.Groups[3].Captures[0].Value);
@@ -200,13 +210,11 @@ namespace GodLesZ.Tools.RtlNowReader {
                      tcUrl=rtmpe://fms-fra12.rtl.de/rtlnow/ 
                      pageUrl=http://rtl-now.rtl.de/alles-was-zaehlt/familienzuwachs.php?film_id=173505&player=1&season=2014
                  */
-                var matchPageUrl = Regex.Match(pageUrl, @"/([^./]+)\.php\?film_id=([^&]+)&");
-                var outputFilename = (matchPageUrl.Success ? string.Format("{0}-{1}.f4v", matchPageUrl.Groups[2].Captures[0].Value, matchPageUrl.Groups[1].Captures[0].Value) : "out");
-                var rtmpdumpArgs = string.Format("-V -i \"{0}\" -o \"{1}\"", finalUrl, outputFilename);
+                var rtmpdumpArgs = string.Format("-V -i \"{0}\" -o \"{1}\"", finalUrl, episodeEntry.Filename);
 
                 SpawnRtmpdump(rtmpdumpArgs, worker);
 
-                args.Result = outputFilename;
+                args.Result = episodeEntry.Filename;
             }
         }
 
@@ -218,12 +226,12 @@ namespace GodLesZ.Tools.RtlNowReader {
 
         private void VideoLoaderOnRunWorkerCompleted(object sender, RunWorkerCompletedEventArgs args) {
             if (args.Result == null) {
-                MessageBox.Show("Failed to dump video, please refer to rtmpdump log.!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(Resources.Error_VideoLoader_FailedToDump_Msg, Resources.Error_VideoLoader_FailedToDump_Title, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 UnblockUi();
                 return;
             }
 
-            MessageBox.Show(string.Format("Done!{0}Saved as: {1}", Environment.NewLine, args.Result), "Dump Finished", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show(string.Format("Done!{0}Saved as: {1}", Environment.NewLine, args.Result), Resources.VideoLoader_DumpFinished_Title, MessageBoxButtons.OK, MessageBoxIcon.Information);
 
             UnblockUi();
         }
@@ -236,13 +244,19 @@ namespace GodLesZ.Tools.RtlNowReader {
                 return;
             }
 
+            var showIndex = listShows.SelectedIndices[0];
+            var showEntry = _shows[showIndex];
+            if (showEntry.Episodes != null && showEntry.Episodes.Count > 0) {
+                EpisodeLoaderOnRunWorkerCompleted(null, new RunWorkerCompletedEventArgs(null, null, false));
+                return;
+            }
+
             BlockUi();
 
-            var showEntry = _shows[listShows.SelectedIndices[0]];
             var loader = new BackgroundWorker();
             loader.DoWork += EpisodeLoaderOnDoWork;
             loader.RunWorkerCompleted += EpisodeLoaderOnRunWorkerCompleted;
-            loader.RunWorkerAsync(showEntry);
+            loader.RunWorkerAsync(showIndex);
         }
 
         private void listEpisodes_SelectedIndexChanged(object sender, EventArgs e) {
@@ -250,18 +264,25 @@ namespace GodLesZ.Tools.RtlNowReader {
                 return;
             }
 
-            var showEntry = _shows[listShows.SelectedIndices[0]];
-            var episodeEntry = showEntry.Episodes[listEpisodes.SelectedIndices[0]];
+            var showIndex = listShows.SelectedIndices[0];
+            var episodeIndex = listEpisodes.SelectedIndices[0];
+
+            if (File.Exists(_shows[showIndex].Episodes[episodeIndex].Filepath)) {
+                if (MessageBox.Show(Resources.VideoLoader_FileExists_Msg, Resources.VideoLoader_FileExists_Title, MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes) {
+                    return;
+                }
+            }
 
             txtRtmpdump.Text = "";
             BlockUi();
 
-            var loader = new BackgroundWorker();
-            loader.WorkerReportsProgress = true;
+            var loader = new BackgroundWorker {
+                WorkerReportsProgress = true
+            };
             loader.DoWork += VideoLoaderOnDoWork;
             loader.RunWorkerCompleted += VideoLoaderOnRunWorkerCompleted;
             loader.ProgressChanged += VideoLoaderOnProgressChanged;
-            loader.RunWorkerAsync(episodeEntry);
+            loader.RunWorkerAsync(new[] { showIndex, episodeIndex });
         }
 
 
