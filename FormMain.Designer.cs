@@ -25,15 +25,31 @@
         private void InitializeComponent() {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormMain));
+            this.menuMain = new System.Windows.Forms.MenuStrip();
             this.listShows = new System.Windows.Forms.ListView();
             this.colShowName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.imagesShowThumbs = new System.Windows.Forms.ImageList(this.components);
             this.listEpisodes = new System.Windows.Forms.ListView();
             this.colEpisodesName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.colEpisodesDumped = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.imagesEpisodeThumbs = new System.Windows.Forms.ImageList(this.components);
             this.txtRtmpdump = new System.Windows.Forms.TextBox();
-            this.colEpisodesDumped = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.menuMainProgram = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuMainMediathek = new System.Windows.Forms.ToolStripMenuItem();
+            this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuMain.SuspendLayout();
             this.SuspendLayout();
+            // 
+            // menuMain
+            // 
+            this.menuMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.menuMainProgram,
+            this.menuMainMediathek});
+            this.menuMain.Location = new System.Drawing.Point(0, 0);
+            this.menuMain.Name = "menuMain";
+            this.menuMain.Size = new System.Drawing.Size(799, 24);
+            this.menuMain.TabIndex = 3;
+            this.menuMain.Text = "menuStrip1";
             // 
             // listShows
             // 
@@ -45,10 +61,10 @@
             this.listShows.GridLines = true;
             this.listShows.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.listShows.HideSelection = false;
-            this.listShows.Location = new System.Drawing.Point(13, 13);
+            this.listShows.Location = new System.Drawing.Point(13, 27);
             this.listShows.MultiSelect = false;
             this.listShows.Name = "listShows";
-            this.listShows.Size = new System.Drawing.Size(355, 395);
+            this.listShows.Size = new System.Drawing.Size(355, 381);
             this.listShows.SmallImageList = this.imagesShowThumbs;
             this.listShows.TabIndex = 0;
             this.listShows.UseCompatibleStateImageBehavior = false;
@@ -77,7 +93,7 @@
             this.listEpisodes.FullRowSelect = true;
             this.listEpisodes.GridLines = true;
             this.listEpisodes.HideSelection = false;
-            this.listEpisodes.Location = new System.Drawing.Point(375, 13);
+            this.listEpisodes.Location = new System.Drawing.Point(375, 27);
             this.listEpisodes.MultiSelect = false;
             this.listEpisodes.Name = "listEpisodes";
             this.listEpisodes.Size = new System.Drawing.Size(412, 176);
@@ -92,6 +108,11 @@
             this.colEpisodesName.Text = "Name";
             this.colEpisodesName.Width = 341;
             // 
+            // colEpisodesDumped
+            // 
+            this.colEpisodesDumped.Text = "";
+            this.colEpisodesDumped.Width = 26;
+            // 
             // imagesEpisodeThumbs
             // 
             this.imagesEpisodeThumbs.ColorDepth = System.Windows.Forms.ColorDepth.Depth32Bit;
@@ -102,18 +123,33 @@
             // 
             this.txtRtmpdump.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtRtmpdump.Location = new System.Drawing.Point(375, 195);
+            this.txtRtmpdump.Location = new System.Drawing.Point(375, 209);
             this.txtRtmpdump.Multiline = true;
             this.txtRtmpdump.Name = "txtRtmpdump";
             this.txtRtmpdump.ReadOnly = true;
             this.txtRtmpdump.ScrollBars = System.Windows.Forms.ScrollBars.Horizontal;
-            this.txtRtmpdump.Size = new System.Drawing.Size(412, 213);
+            this.txtRtmpdump.Size = new System.Drawing.Size(412, 199);
             this.txtRtmpdump.TabIndex = 2;
             // 
-            // colEpisodesDumped
+            // menuMainProgram
             // 
-            this.colEpisodesDumped.Text = "";
-            this.colEpisodesDumped.Width = 26;
+            this.menuMainProgram.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.exitToolStripMenuItem});
+            this.menuMainProgram.Name = "menuMainProgram";
+            this.menuMainProgram.Size = new System.Drawing.Size(65, 20);
+            this.menuMainProgram.Text = "Program";
+            // 
+            // menuMainMediathek
+            // 
+            this.menuMainMediathek.Name = "menuMainMediathek";
+            this.menuMainMediathek.Size = new System.Drawing.Size(75, 20);
+            this.menuMainMediathek.Text = "Mediathek";
+            // 
+            // exitToolStripMenuItem
+            // 
+            this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.exitToolStripMenuItem.Text = "Exit";
             // 
             // FormMain
             // 
@@ -123,11 +159,15 @@
             this.Controls.Add(this.txtRtmpdump);
             this.Controls.Add(this.listEpisodes);
             this.Controls.Add(this.listShows);
+            this.Controls.Add(this.menuMain);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MainMenuStrip = this.menuMain;
             this.MinimumSize = new System.Drawing.Size(815, 459);
             this.Name = "FormMain";
             this.Text = "RtlNow RTMPE/HDS Dumper - by GodLesZ";
             this.Shown += new System.EventHandler(this.FormMain_Shown);
+            this.menuMain.ResumeLayout(false);
+            this.menuMain.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -135,6 +175,7 @@
 
         #endregion
 
+        private System.Windows.Forms.MenuStrip menuMain;
         private System.Windows.Forms.ListView listShows;
         private System.Windows.Forms.ColumnHeader colShowName;
         private System.Windows.Forms.ImageList imagesShowThumbs;
@@ -143,6 +184,9 @@
         private System.Windows.Forms.TextBox txtRtmpdump;
         private System.Windows.Forms.ImageList imagesEpisodeThumbs;
         private System.Windows.Forms.ColumnHeader colEpisodesDumped;
+        private System.Windows.Forms.ToolStripMenuItem menuMainProgram;
+        private System.Windows.Forms.ToolStripMenuItem menuMainMediathek;
+        private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
     }
 }
 

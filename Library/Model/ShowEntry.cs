@@ -27,7 +27,7 @@ namespace GodLesZ.Tools.RtlNowReader.Library.Model {
 
 
         public Image FetchThumb() {
-            if (_thumb != null) {
+            if (_thumb != null || string.IsNullOrEmpty(ThumbUrl)) {
                 return _thumb;
             }
             

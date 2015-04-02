@@ -1,15 +1,20 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using System.IO;
 using System.Net;
+using System.Text.RegularExpressions;
 
 namespace GodLesZ.Tools.RtlNowReader.Library.Model {
 
     public class EpisodeEntry {
         protected Image _poster = null;
+        protected string _name;
 
         public string Name {
-            get;
-            set;
+            get { return _name; }
+            set {
+                _name = Regex.Replace(value, "[^a-z0-9-_]", "", RegexOptions.IgnoreCase);
+            }
         }
 
         public string Filename {
@@ -32,7 +37,7 @@ namespace GodLesZ.Tools.RtlNowReader.Library.Model {
 
 
         public Image FetchPoster() {
-            if (_poster != null) {
+            if (_poster != null || string.IsNullOrEmpty(Poster)) {
                 return _poster;
             }
               

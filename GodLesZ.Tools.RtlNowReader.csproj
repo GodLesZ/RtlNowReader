@@ -65,6 +65,7 @@
       <DependentUpon>FormMain.cs</DependentUpon>
     </Compile>
     <Compile Include="Library\Model\EpisodeEntry.cs" />
+    <Compile Include="Library\Model\MediathekInfo.cs" />
     <Compile Include="Library\Model\ShowEntry.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
